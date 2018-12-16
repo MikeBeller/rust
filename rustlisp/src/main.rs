@@ -11,10 +11,11 @@ struct Pair {
 enum Value {
     Cons(Rc<Pair>),
     Number(i32),
+    Symbol(Rc<String>),
     Nil,
 }
 
-use crate::Value::{Cons,Number,Nil};
+use crate::Value::{Cons,Number,Nil,Symbol};
 
 fn cons(car: Value, cdr: Value) -> Value {
     Cons(Rc::new(Pair{car: car, cdr: cdr}))
@@ -23,13 +24,26 @@ fn cons(car: Value, cdr: Value) -> Value {
 fn car(v: &Value) -> Value {
     match v {
         Cons(p) => p.car.clone(),
-        _ => Nil
+        _ => panic!("not a list"),
     }
 }
 
+fn cdr(v: &Value) -> Value {
+    match v {
+        Cons(p) => p.cdr.clone(),
+        _ => panic!("not a list"),
+    }
+}
+
+fn sym(s: &str) -> Value {
+    Symbol(Rc::new(s.to_string()))
+}
+
 fn main() {
-    let list = Nil;
-    let num = Number(7);
-    let c = cons(Nil,Nil);
-    println!("{:?} {:?} {:?} {:?}", list, num, c, car(&c));
+    let p1 = cons(sym("foo"), Number(3));
+    let p2 = cons(sym("bar"), Number(7));
+    let lst = cons(p1, cons(p2, Nil));
+    println!("lst: {:?}", lst);
+    println!("car lst: {:?}", car(&lst));
+    println!("cdr lst: {:?}", cdr(&lst));
 }
