@@ -1,0 +1,7 @@
+[package]
+name = "rustlisp"
+version = "0.1.0"
+authors = ["mike <mike@thesystech.com>"]
+edition = "2018"
+
+[dependencies]
