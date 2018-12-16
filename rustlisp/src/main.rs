@@ -1,15 +1,8 @@
-
 use std::rc::Rc;
-
-#[derive(Debug)]
-struct Pair {
-    car: Value,
-    cdr: Value,
-}
 
 #[derive(Debug,Clone)]
 enum Value {
-    Cons(Rc<Pair>),
+    Cons(Rc<(Value,Value)>),
     Number(i32),
     Symbol(Rc<String>),
     Nil,
@@ -18,20 +11,20 @@ enum Value {
 use crate::Value::{Cons,Number,Nil,Symbol};
 
 fn cons(car: Value, cdr: Value) -> Value {
-    Cons(Rc::new(Pair{car: car, cdr: cdr}))
+    Cons(Rc::new((car,cdr)))
 }
 
 fn car(v: &Value) -> Value {
     match v {
-        Cons(p) => p.car.clone(),
-        _ => panic!("not a list"),
+        Cons(p) => p.0.clone(),
+        _ => panic!("not a cons cell"),
     }
 }
 
 fn cdr(v: &Value) -> Value {
     match v {
-        Cons(p) => p.cdr.clone(),
-        _ => panic!("not a list"),
+        Cons(p) => p.1.clone(),
+        _ => panic!("not a cons cell"),
     }
 }
 
