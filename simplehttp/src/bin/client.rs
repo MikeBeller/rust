@@ -1,21 +1,35 @@
+use std::env;
+use std::thread;
 use ureq;
 
 fn main() {
-    let args:Vec<String> = std::env::args().collect();
-    let nreqs = args[1].parse::<i32>().unwrap();
+    let args: Vec<String> = env::args().collect();
+    let nthreads = args[1].parse::<i32>().unwrap();
+    let nreqs = args[2].parse::<i32>().unwrap();
+    let mut children = vec![];
 
-    let mut total_bytes = 0;
-    for _i in 0..nreqs {
-        let resp = ureq::get("http://127.0.0.1:7878/hello")
-            .set("X-My-Header", "Secret")
-            .call();
+    for ti in 0..nthreads {
+        children.push(thread::spawn(move || {
+            println!("this is thread number {}", ti);
+            let mut total_fail = 0;
+            let mut total_ok = 0;
+            let agent = ureq::agent();
+            for _i in 0..nreqs {
+                let resp = agent.get("http://127.0.0.1:7878/hello")
+                    .set("X-My-Header", "Secret")
+                    .call();
 
-        if resp.ok() {
-            total_bytes += resp.into_string().unwrap().len();
-        } else {
-            println!("ERR: {}", resp.into_string().unwrap());
-        }
+                if resp.ok() {
+                    total_ok += 1;
+                } else {
+                    total_fail += 1;
+                }
+            }
+            println!("Ok: {} Fail: {}", total_ok, total_fail);
+        }));
     }
 
-    println!("Total: {}", total_bytes);
+    for child in children {
+        let _ = child.join();
+    }
 }
