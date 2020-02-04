@@ -11,6 +11,6 @@ Test programs in rust
 
 Other canonical little programs:
 
-* [Binary tree using Option<Box<Node>> ](https://play.rust-lang.org/?version=stable&mode=debug&edition=2018&gist=7934eb4e16ac33aa9ecac2c98c463d4d)
+* [Binary tree using Option<Box<Node>> ](https://play.rust-lang.org/?version=stable&mode=debug&edition=2018&gist=a8f47ac7221f368049c43648ffbcc1d4)
 * [Read a file line by line](https://play.rust-lang.org/?version=stable&mode=debug&edition=2018&gist=c07b3d878b9e039b83d04f49ba97ee97)
 
